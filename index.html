@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>News Brand World Cup Latest</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: transparent; font-family: 'Manrope', sans-serif; }
+  .ticker-outer {
+    background: #0d2940;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+  }
+  .ticker-badge {
+    flex-shrink: 0;
+    height: 100%;
+    width: 180px;
+    background: #F9D13C;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 0 14px;
+    z-index: 10;
+  }
+  .badge-top { font-size: 9px; font-weight: 700; color: #0C2A3F; text-transform: uppercase; letter-spacing: .14em; opacity: .7; line-height: 1; margin-bottom: 3px; white-space: nowrap; }
+  .badge-main { font-size: 11px; font-weight: 800; color: #0C2A3F; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap; }
+  .ticker-track-wrap { flex: 1; overflow: hidden; height: 100%; display: flex; align-items: center; }
+  .ticker-track { display: flex; align-items: center; white-space: nowrap; animation: scroll-linkedin 45s linear infinite; will-change: transform; }
+  .ticker-track:hover { animation-play-state: paused; }
+  @keyframes scroll-linkedin { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .ticker-item { display: inline-flex; align-items: center; text-decoration: none; color: inherit; }
+  .ticker-item:hover .item-text { color: #F9D13C; }
+  .item-dot { color: #F9D13C; font-size: 8px; margin: 0 20px; flex-shrink: 0; opacity: .6; }
+  .item-text { font-size: 13px; font-weight: 600; color: #ffffff; transition: color .2s; white-space: nowrap; }
+  .item-source { font-size: 11px; font-weight: 700; color: #F9D13C; margin-left: 8px; white-space: nowrap; text-transform: uppercase; letter-spacing: .05em; }
+  .ticker-fade-left { position: absolute; left: 180px; top: 0; bottom: 0; width: 40px; background: linear-gradient(to right, #0d2940, transparent); z-index: 5; pointer-events: none; }
+  .ticker-fade-right { position: absolute; right: 0; top: 0; bottom: 0; width: 60px; background: linear-gradient(to left, #0d2940, transparent); z-index: 5; pointer-events: none; }
+  .results-outer { background: #0d2940; border-top: 1px solid #F9D13C; height: 28px; display: flex; align-items: center; overflow: hidden; position: relative; width: 100%; }
+  .results-badge { flex-shrink: 0; height: 100%; background: #0d2940; border-right: 2px solid #F9D13C; display: flex; align-items: center; padding: 0 12px; z-index: 10; }
+  .results-badge-text { font-size: 9px; font-weight: 800; color: #F9D13C; text-transform: uppercase; letter-spacing: .12em; white-space: nowrap; }
+  .results-track-wrap { flex: 1; overflow: hidden; height: 100%; display: flex; align-items: center; }
+  .results-track { display: flex; align-items: center; white-space: nowrap; animation: scroll-results 60s linear infinite; will-change: transform; }
+  .results-track:hover { animation-play-state: paused; }
+  @keyframes scroll-results { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .result-item { display: inline-flex; flex-direction: row; align-items: center; gap: 6px; padding: 0 16px 0 0; }
+  .result-teams { font-size: 10px; font-weight: 700; color: #ffffff; white-space: nowrap; }
+  .result-score { font-size: 10px; font-weight: 800; color: #F9D13C; white-space: nowrap; background: rgba(249,209,60,0.1); padding: 1px 6px; border-radius: 3px; }
+  .result-status { font-size: 9px; font-weight: 600; color: #8a9bb5; white-space: nowrap; text-transform: uppercase; letter-spacing: .06em; }
+  .result-status.live { color: #ff4444; animation: pulse 1.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+  .result-sep { color: #1e3358; font-size: 12px; padding: 0 2px; }
+  .results-fade-right { position: absolute; right: 0; top: 0; bottom: 0; width: 60px; background: linear-gradient(to left, #0d2940, transparent); z-index: 5; pointer-events: none; }
+  @media (max-width: 600px) {
+    .ticker-badge { width: 140px; padding: 0 10px; }
+    .badge-top { font-size: 8px; }
+    .badge-main { font-size: 10px; }
+    .item-text { font-size: 12px; }
+    .ticker-fade-left { left: 140px; }
+  }
+
+  .live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #0d2940;
+    flex-shrink: 0;
+    animation: live-pulse 1.5s ease-in-out infinite;
+    margin-bottom: 1px;
+  }
+  @keyframes live-pulse {
+    0%,100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(13,41,64,0.6); }
+    50% { opacity: .8; transform: scale(1.2); box-shadow: 0 0 0 4px rgba(13,41,64,0); }
+  }
+</style>
+</head>
+<body>
+<div class="ticker-outer">
+  <div class="ticker-badge">
+    <div style="display:flex;align-items:center;gap:5px;margin-bottom:3px"><div class="live-dot"></div><div class="badge-top" style="margin-bottom:0">News Brand Live Feed</div></div>
+    <div class="badge-main">World Cup Latest:</div>
+  </div>
+  <div class="ticker-track-wrap">
+    <div class="ticker-track" id="track"></div>
+  </div>
+  <div class="ticker-fade-left"></div>
+  <div class="ticker-fade-right"></div>
+</div>
+<div class="results-outer">
+  <div class="results-badge"><span class="results-badge-text">Fixtures</span></div>
+  <div class="results-track-wrap">
+    <div class="results-track" id="results-track"></div>
+  </div>
+  <div class="results-fade-right"></div>
+</div>
+<script>
+  var SHEET_ID = '2PACX-1vT8_iwto_QBz5cT_aumMT7DLM1RGwhVFHBM6no9Bq6cnrnk5wCFytvnXtAbZv9I5ZeDbECu4zTXPw2N';
+
+  var fallbackPosts = [
+    { text: "Superb World Cup editorial panel", source: "NewsWorks", url: "https://www.linkedin.com/posts/newsworks_superb-world-cup-editorial-panel-at-publicis-activity-7440069270878834688-DgY0" },
+    { text: "Most anticipated World Cups ever", source: "NewsWorks", url: "https://www.linkedin.com/posts/newsworks_brits-believe-world-cup-will-boost-the-nation-activity-7435275853628018688-Y17G" },
+    { text: "Lively NewsWorks World Cup chat", source: "Kate McGreavy", url: "https://www.linkedin.com/posts/kate-mcgreavy-6a6548111_world-cup-webinar-its-crucial-for-journalists-activity-7444092879775387649-W_T1" },
+    { text: "Exclusive webinar preview", source: "NewsWorks", url: "https://www.linkedin.com/posts/newsworks_tomorrow-morning-at-930am-we-kick-off-our-activity-7441848348912955393-C9yy" },
+  ];
+
+  function buildTicker(posts) {
+    if (!posts || !posts.length) return;
+    var doubled = posts.concat(posts);
+    var html = doubled.map(function(p) {
+      return '<a class="ticker-item" href="' + (p.url||'#') + '" target="_blank" rel="noopener">'
+        + '<span class="item-dot">●</span>'
+        + '<span class="item-text">' + p.text + '</span>'
+        + '<span class="item-source"> — ' + (p.source||'NewsWorks') + '</span>'
+        + '</a>';
+    }).join('');
+    document.getElementById('track').innerHTML = html;
+  }
+
+  async function loadPosts() {
+    try {
+      // Use Google Sheets JSON endpoint - no CORS issues
+      var url = 'https://docs.google.com/spreadsheets/d/e/' + SHEET_ID + '/pub?gid=0&single=true&output=csv';
+      var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
+      const res = await fetch(proxyUrl);
+      const csv = await res.text();
+      if (!csv || csv.includes('<!DOCTYPE')) { buildTicker(fallbackPosts); return; }
+      var lines = csv.trim().split('\n');
+      var headers = lines[0].split(',').map(function(h){ return h.trim().replace(/^"|"$/g,'').toLowerCase(); });
+      var posts = lines.slice(1).map(function(line) {
+        var cols = []; var inQ = false; var cur = '';
+        for (var i = 0; i < line.length; i++) {
+          if (line[i]==='"') { inQ=!inQ; }
+          else if (line[i]===',' && !inQ) { cols.push(cur.trim()); cur=''; }
+          else { cur+=line[i]; }
+        }
+        cols.push(cur.trim());
+        var obj = {};
+        headers.forEach(function(h,i){ obj[h]=(cols[i]||'').replace(/^"|"$/g,''); });
+        return obj;
+      }).filter(function(r){ return r.text; });
+      buildTicker(posts.length ? posts : fallbackPosts);
+    } catch(e) {
+      buildTicker(fallbackPosts);
+    }
+  }
+
+  var fixtures = [
+    {home:'Mexico',away:'South Africa',date:'11 Jun',kickoff:'8:00pm'},
+    {home:'South Korea',away:'Czechia',date:'11 Jun',kickoff:'3:00am'},
+    {home:'Canada',away:'Bosnia & Herz',date:'12 Jun',kickoff:'8:00pm'},
+    {home:'USA',away:'Paraguay',date:'12 Jun',kickoff:'2:00am'},
+    {home:'Qatar',away:'Switzerland',date:'13 Jun',kickoff:'8:00pm'},
+    {home:'Brazil',away:'Morocco',date:'13 Jun',kickoff:'11:00pm'},
+    {home:'Haiti',away:'Scotland',date:'14 Jun',kickoff:'2:00am'},
+    {home:'Australia',away:'Turkey',date:'14 Jun',kickoff:'5:00am'},
+    {home:'Germany',away:'Curacao',date:'14 Jun',kickoff:'6:00pm'},
+    {home:'Netherlands',away:'Japan',date:'14 Jun',kickoff:'9:00pm'},
+    {home:'Ivory Coast',away:'Ecuador',date:'15 Jun',kickoff:'12:00am'},
+    {home:'Sweden',away:'Tunisia',date:'15 Jun',kickoff:'3:00am'},
+    {home:'Spain',away:'Cape Verde',date:'15 Jun',kickoff:'6:00pm'},
+    {home:'Belgium',away:'Egypt',date:'15 Jun',kickoff:'11:00pm'},
+    {home:'Saudi Arabia',away:'Uruguay',date:'15 Jun',kickoff:'11:00pm'},
+    {home:'Iran',away:'New Zealand',date:'16 Jun',kickoff:'2:00am'},
+    {home:'France',away:'Senegal',date:'16 Jun',kickoff:'8:00pm'},
+    {home:'Iraq',away:'Norway',date:'16 Jun',kickoff:'11:00pm'},
+    {home:'Argentina',away:'Algeria',date:'17 Jun',kickoff:'2:00am'},
+    {home:'Austria',away:'Jordan',date:'17 Jun',kickoff:'2:00am'},
+    {home:'Portugal',away:'DR Congo',date:'17 Jun',kickoff:'6:00pm'},
+    {home:'England',away:'Croatia',date:'17 Jun',kickoff:'9:00pm'},
+    {home:'Ghana',away:'Panama',date:'18 Jun',kickoff:'12:00am'},
+    {home:'Uzbekistan',away:'Colombia',date:'18 Jun',kickoff:'1:00am'},
+  ];
+
+  function showFixtures() {
+    document.querySelector('.results-badge-text').textContent = 'Fixtures';
+    var items = fixtures.map(function(f) {
+      return '<span class="result-item"><span class="result-teams">'+f.home+' v '+f.away+'</span><span class="result-status">'+f.date+' · '+f.kickoff+'</span></span><span class="result-sep">|</span>';
+    }).join('');
+    document.getElementById('results-track').innerHTML = items + items;
+  }
+
+  async function loadResults() {
+    try {
+      const res = await fetch('https://worldcup26.ir/get/games');
+      const data = await res.json();
+      const games = Array.isArray(data) ? data : (data.games||data.matches||data.data||[]);
+      const live = games.filter(g=>['live','1h','2h','ht','in progress'].includes((g.status||g.state||'').toLowerCase()));
+      const finished = games.filter(g=>['finished','ft','full time','completed'].includes((g.status||g.state||'').toLowerCase()));
+      const toShow = [...live,...finished].slice(0,20);
+      if (!toShow.length) { showFixtures(); return; }
+      document.querySelector('.results-badge-text').textContent = live.length ? 'Live' : 'Results';
+      function getName(t){return t&&(t.name||t.team||t.country||'?')||'?';}
+      function getScore(g){
+        if(g.score){if(typeof g.score==='string')return g.score;if(g.score.ft)return g.score.ft[0]+' - '+g.score.ft[1];if(g.score.home!==undefined)return g.score.home+' - '+g.score.away;}
+        const h=g.home_score??g.homeScore??'';const a=g.away_score??g.awayScore??'';
+        return(h!==''&&a!=='')?h+' - '+a:'? - ?';
+      }
+      const items = toShow.map(g=>{
+        const h=getName(g.home_team||g.homeTeam||g.team1||g.home||{name:g.home_name||'?'});
+        const a=getName(g.away_team||g.awayTeam||g.team2||g.away||{name:g.away_name||'?'});
+        const isLive=live.includes(g);
+        return '<span class="result-item"><span class="result-teams">'+h+' v '+a+'</span><span class="result-score">'+getScore(g)+'</span><span class="result-status'+(isLive?' live':'')+'">'+( isLive?'Live':'FT')+'</span></span><span class="result-sep">|</span>';
+      }).join('');
+      document.getElementById('results-track').innerHTML = items + items;
+    } catch(e) { showFixtures(); }
+  }
+
+  loadPosts();
+  setInterval(loadPosts, 300000);
+  loadResults();
+  setInterval(loadResults, 60000);
+</script>
+</body>
+</html>
