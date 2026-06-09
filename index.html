@@ -9,7 +9,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { background: transparent; font-family: 'Manrope', sans-serif; }
   .ticker-outer {
-   border-top: 1px solid #F9D13C;
+    border-top: 3px solid #F9D13C;
     background: #0d2940;
     height: 48px;
     display: flex;
@@ -43,7 +43,7 @@
   .item-source { font-size: 11px; font-weight: 700; color: #F9D13C; margin-left: 8px; white-space: nowrap; text-transform: uppercase; letter-spacing: .05em; }
   .ticker-fade-left { position: absolute; left: 180px; top: 0; bottom: 0; width: 40px; background: linear-gradient(to right, #0d2940, transparent); z-index: 5; pointer-events: none; }
   .ticker-fade-right { position: absolute; right: 0; top: 0; bottom: 0; width: 60px; background: linear-gradient(to left, #0d2940, transparent); z-index: 5; pointer-events: none; }
-  .results-outer { background: #0d2940; border-top: 1px solid #F9D13C; height: 28px; display: flex; align-items: center; overflow: hidden; position: relative; width: 100%; }
+  .results-outer { background: #0d2940; border-top: 3px solid #F9D13C; height: 28px; display: flex; align-items: center; overflow: hidden; position: relative; width: 100%; }
   .results-badge { flex-shrink: 0; height: 100%; background: #0d2940; border-right: 2px solid #F9D13C; display: flex; align-items: center; padding: 0 12px; z-index: 10; }
   .results-badge-text { font-size: 9px; font-weight: 800; color: #F9D13C; text-transform: uppercase; letter-spacing: .12em; white-space: nowrap; }
   .results-track-wrap { flex: 1; overflow: hidden; height: 100%; display: flex; align-items: center; }
@@ -65,7 +65,6 @@
     .item-text { font-size: 12px; }
     .ticker-fade-left { left: 140px; }
   }
-
   .live-dot {
     width: 7px;
     height: 7px;
@@ -101,8 +100,6 @@
   <div class="results-fade-right"></div>
 </div>
 <script>
-  var SHEET_ID = '2PACX-1vT8_iwto_QBz5cT_aumMT7DLM1RGwhVFHBM6no9Bq6cnrnk5wCFytvnXtAbZv9I5ZeDbECu4zTXPw2N';
-
   var fallbackPosts = [
     { text: "Superb World Cup editorial panel", source: "NewsWorks", url: "https://www.linkedin.com/posts/newsworks_superb-world-cup-editorial-panel-at-publicis-activity-7440069270878834688-DgY0" },
     { text: "Most anticipated World Cups ever", source: "NewsWorks", url: "https://www.linkedin.com/posts/newsworks_brits-believe-world-cup-will-boost-the-nation-activity-7435275853628018688-Y17G" },
@@ -123,28 +120,29 @@
     document.getElementById('track').innerHTML = html;
   }
 
+  function parseCSV(csv) {
+    var lines = csv.trim().split('\n');
+    var headers = lines[0].split(',').map(function(h){ return h.trim().replace(/^"|"$/g,'').toLowerCase(); });
+    return lines.slice(1).map(function(line) {
+      var cols = []; var inQ = false; var cur = '';
+      for (var i = 0; i < line.length; i++) {
+        if (line[i]==='"') { inQ=!inQ; }
+        else if (line[i]===',' && !inQ) { cols.push(cur.trim()); cur=''; }
+        else { cur+=line[i]; }
+      }
+      cols.push(cur.trim());
+      var obj = {};
+      headers.forEach(function(h,i){ obj[h]=(cols[i]||'').replace(/^"|"$/g,''); });
+      return obj;
+    }).filter(function(r){ return r.text; });
+  }
+
   async function loadPosts() {
     try {
-      // Use Google Sheets JSON endpoint - no CORS issues
-      var url = 'https://docs.google.com/spreadsheets/d/e/' + SHEET_ID + '/pub?gid=0&single=true&output=csv';
-      var proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(url);
-      const res = await fetch(proxyUrl);
+      const res = await fetch('/.netlify/functions/sheet');
       const csv = await res.text();
       if (!csv || csv.includes('<!DOCTYPE')) { buildTicker(fallbackPosts); return; }
-      var lines = csv.trim().split('\n');
-      var headers = lines[0].split(',').map(function(h){ return h.trim().replace(/^"|"$/g,'').toLowerCase(); });
-      var posts = lines.slice(1).map(function(line) {
-        var cols = []; var inQ = false; var cur = '';
-        for (var i = 0; i < line.length; i++) {
-          if (line[i]==='"') { inQ=!inQ; }
-          else if (line[i]===',' && !inQ) { cols.push(cur.trim()); cur=''; }
-          else { cur+=line[i]; }
-        }
-        cols.push(cur.trim());
-        var obj = {};
-        headers.forEach(function(h,i){ obj[h]=(cols[i]||'').replace(/^"|"$/g,''); });
-        return obj;
-      }).filter(function(r){ return r.text; });
+      var posts = parseCSV(csv);
       buildTicker(posts.length ? posts : fallbackPosts);
     } catch(e) {
       buildTicker(fallbackPosts);
