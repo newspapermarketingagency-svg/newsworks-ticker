@@ -220,12 +220,37 @@
     {home:'Jordan',away:'Argentina',date:'28 Jun',kickoff:'3:00am'},
   ];
 
-  function showFixtures() {
+  function normName(s){
+    return (s||'').toLowerCase().replace(/[^a-z]/g,'');
+  }
+  // Map our display names to API's English names where they differ
+  var nameMap = {
+    'bosnia & herz': 'bosnia and herzegovina',
+    'czechia': 'czech republic',
+    'dr congo': 'democratic republic of the congo',
+  };
+  function apiName(displayName){
+    var key = displayName.toLowerCase();
+    return nameMap[key] || displayName;
+  }
+
+  function renderFixtures(liveMap, finishedMap) {
     document.querySelector('.results-badge-text').textContent = 'Fixtures';
     var items = fixtures.map(function(f) {
+      var key = normName(apiName(f.home)) + '_' + normName(apiName(f.away));
+      var match = finishedMap[key] || liveMap[key];
+      if (match) {
+        var isLive = !!liveMap[key];
+        var statusLabel = isLive ? (match.time_elapsed && match.time_elapsed !== 'notstarted' ? match.time_elapsed : 'Live') : 'FT';
+        return '<span class="result-item"><span class="result-teams">'+f.home+' v '+f.away+'</span><span class="result-score">'+(match.home_score??'?')+' - '+(match.away_score??'?')+'</span><span class="result-status'+(isLive?' live':'')+'">'+statusLabel+'</span></span><span class="result-sep">|</span>';
+      }
       return '<span class="result-item"><span class="result-teams">'+f.home+' v '+f.away+'</span><span class="result-status">'+f.date+' · '+f.kickoff+'</span></span><span class="result-sep">|</span>';
     }).join('');
     document.getElementById('results-track').innerHTML = items + items;
+  }
+
+  function showFixtures() {
+    renderFixtures({}, {});
   }
 
   async function loadResults() {
@@ -233,24 +258,26 @@
       const res = await fetch('https://worldcup26.ir/get/games');
       const data = await res.json();
       const games = Array.isArray(data) ? data : (data.games||data.matches||data.data||[]);
-      const live = games.filter(g=>['live','1h','2h','ht','in progress'].includes((g.status||g.state||'').toLowerCase()));
-      const finished = games.filter(g=>['finished','ft','full time','completed'].includes((g.status||g.state||'').toLowerCase()));
-      const toShow = [...live,...finished].slice(0,20);
-      if (!toShow.length) { showFixtures(); return; }
-      document.querySelector('.results-badge-text').textContent = live.length ? 'Live' : 'Results';
-      function getName(t){return t&&(t.name||t.team||t.country||'?')||'?';}
-      function getScore(g){
-        if(g.score){if(typeof g.score==='string')return g.score;if(g.score.ft)return g.score.ft[0]+' - '+g.score.ft[1];if(g.score.home!==undefined)return g.score.home+' - '+g.score.away;}
-        const h=g.home_score??g.homeScore??'';const a=g.away_score??g.awayScore??'';
-        return(h!==''&&a!=='')?h+' - '+a:'? - ?';
+
+      var liveMap = {};
+      var finishedMap = {};
+
+      games.forEach(function(g) {
+        var key = normName(g.home_team_name_en) + '_' + normName(g.away_team_name_en);
+        var isFinished = g.finished === true || g.finished === 'TRUE' || g.finished === 'true';
+        var te = (g.time_elapsed||'').toLowerCase();
+        if (isFinished) {
+          finishedMap[key] = g;
+        } else if (te && te !== 'notstarted' && te !== 'not started') {
+          liveMap[key] = g;
+        }
+      });
+
+      var liveCount = Object.keys(liveMap).length;
+      if (liveCount) {
+        document.querySelector('.results-badge-text').textContent = 'Live';
       }
-      const items = toShow.map(g=>{
-        const h=getName(g.home_team||g.homeTeam||g.team1||g.home||{name:g.home_name||'?'});
-        const a=getName(g.away_team||g.awayTeam||g.team2||g.away||{name:g.away_name||'?'});
-        const isLive=live.includes(g);
-        return '<span class="result-item"><span class="result-teams">'+h+' v '+a+'</span><span class="result-score">'+getScore(g)+'</span><span class="result-status'+(isLive?' live':'')+'">'+( isLive?'Live':'FT')+'</span></span><span class="result-sep">|</span>';
-      }).join('');
-      document.getElementById('results-track').innerHTML = items + items;
+      renderFixtures(liveMap, finishedMap);
     } catch(e) { showFixtures(); }
   }
 
